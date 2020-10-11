@@ -32,7 +32,6 @@
       //插入(或者修改)方法
       HashTable.prototype.pushFun = function (key, value) {
         let index = this.hashFun(key, this.limit)
-
         if (this.stroage[index] == null) {
           this.stroage[index] = []
           /*
@@ -44,22 +43,20 @@
              */
         }
         let bucket = this.stroage[index]
-
-        //检查是否存在并修改
+        //检查是否存在,如果存在则修改
         for (let i = 0; i < bucket.length; i++) {
           if (bucket[i][0] == key) {
-            bucket[i][0] = value
+            bucket[i][1] = value
             return  //这里的return用于终止函数
           }
         }
-
         //如不存在则添加
         bucket.push([key, value])
         this.count++
-
-        //检查容量
+        //检查容量并扩大
         if (this.count > this.limit * 0.75) {
-          this.resize(this.limit * 2)
+          let currentLimit = this.limit * 2
+          this.resize(this.getPrime(currentLimit))
         }
       }
 
@@ -68,7 +65,6 @@
       //获取方法
       HashTable.prototype.get = function (key) {
         let index = this.hashFun(key, this.limit)
-
         if (this.stroage[index] == null) {
           return null
         }
@@ -96,9 +92,10 @@
             bucket.splice(i, 1)
             this.count--
             //检查容量
-          if(this.limit>7&&this.count<this.limit*0.25){
-            this.resize(Math.floor(this.limit/2))
-          }  
+            if (this.limit > 7 && this.count < this.limit * 0.25) {
+              let currentLimit = Math.floor(this.limit / 2)
+              this.resize(this.getPrime(currentLimit))
+            }
             return tuple
           }
         }
@@ -113,7 +110,6 @@
         this.stroage = []
         this.count = 0
         this.limit = newLength
-
         for (let i = 0; i < oldStorage.length; i++) {
           if (oldStorage[i] == null) {
             continue
@@ -123,6 +119,24 @@
           }
         }
       }
+
+      //判断是否是质数(在下面被用到)
+      HashTable.prototype.isPrime = function (num) {
+        let newNum = parseInt(Math.sqrt(num))
+        for (let i = 2; i <= newNum; i++) {
+          if (num % i == 0) {
+            return false
+          }
+        }
+        return true
+      }
+
+      HashTable.prototype.getPrime = function (num) {
+        while (!this.isPrime(num)) {
+          num++
+        }
+        return num
+      }
     }
 
     let hash = new HashTable()
@@ -130,12 +144,10 @@
     hash.pushFun("james", 4233)
     hash.pushFun("david", 4233)
     hash.pushFun("hinna", 4233)
-    hash.resize(14)
-    console.log(hash.delete("david"))
-    console.log(hash.delete("hinna"))
     hash.pushFun("hinna", 523)
-    hash.pushFun("david", 134)
-    hash.pushFun("david21", 591)
+    hash.pushFun("david", 1345)
+    hash.pushFun("david21", 5931)
+    hash.pushFun("jensen", 4397)
     console.log(hash)
 
 
