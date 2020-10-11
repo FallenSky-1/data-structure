@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+    function change(num) {
+      let stack = [];
+      let Str = '';
+      while (num > 0) {
+        stack.push(num % 2);
+        num = Math.floor(num / 2);
+      }
+      while(stack.length != 0){
+        Str += stack.pop()
+      }
+      //不用for的原因是因为: stack.length的长度一直在动态地因为pop而缩小
+      console.log(Str);
+    }
+
+    change(101);
+    change(2351);
+  </script>
+
+</body>
+
+</html>

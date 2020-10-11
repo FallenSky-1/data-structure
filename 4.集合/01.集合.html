@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+    //并集
+    Set.prototype.union = function (otherSet) {
+      let newSet = new Set();
+
+      //将集合转化为数组
+      let arrayOfSet = Array.from(this)
+
+      for (let i = 0; i < arrayOfSet.length; i++) {
+        newSet.add(arrayOfSet[i])
+      }
+      arrayOfSet = Array.from(otherSet)
+      for (let i = 0; i < arrayOfSet.length; i++) {
+        newSet.add(arrayOfSet[i])
+      }
+      return newSet
+    }
+
+    //交集
+    Set.prototype.intersection = function (otherSet) {
+      let newSet = new Set()
+      let arrayOfSet = Array.from(this)
+      for (let i = 0; i < arrayOfSet.length; i++) {
+        if (otherSet.has(arrayOfSet[i])) {
+            newSet.add(arrayOfSet[i])
+        }
+      }
+      return newSet
+    }
+
+    //差集
+    Set.prototype.difference = function (otherSet) {
+      let newSet = new Set()
+      let arrayOfSet = Array.from(this)
+      for (let i = 0; i < arrayOfSet.length; i++) {
+        if (!otherSet.has(arrayOfSet[i])) {
+            newSet.add(arrayOfSet[i])
+        }
+      }
+      return newSet
+    }
+
+    //子集
+    Set.prototype.subset = function(otherSet){
+    let arrayOfSet = Array.from(this);
+    for(let i = 0;i<arrayOfSet.length;i++){
+         if(!otherSet.has(arrayOfSet[i])){
+             return false
+         }
+         return true
+    }
+   }
+
+    let setA = new Set();
+    setA.add(1)
+    setA.add(13)
+    let setB = new Set();
+    setB.add(15)
+    setB.add(132)
+    setB.add(1)
+    console.log(setA)
+    console.log(setB)
+
+    //测试union方法
+    let unionSet = setA.union(setB)
+
+    //测试interse方法
+    let intersec = setA.intersection(setB)
+    console.log(intersec)
+
+    //测试difference方法
+    let diffSet = setA.difference(setB)
+    console.log(diffSet)
+
+    // console.log(unionSet)
+  </script>
+
+</body>
+
+</html>

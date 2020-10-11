@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+  <script>
+    function queue() {
+      this.items = [];
+
+      queue.prototype.enqueue = function (element) {
+        this.items.push(element);
+      }
+
+      queue.prototype.dequeue = function () {
+        return this.items.shift();
+      }
+
+      queue.prototype.front = function () {
+        return this.items[0]
+      }
+
+      queue.prototype.isEmpty = function () {
+        if (this.items.length == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      queue.prototype.size = function () {
+        return this.items.length + 1;
+      }
+    }
+    
+    function jiguchuanhua(personList, num) {
+      let testQueue = new queue();
+
+      for (let i = 0; i < personList.length; i++) {
+        testQueue.enqueue(personList[i]);
+      }
+
+      let lop =function() {
+        for (let i = 0; i < num - 1; i++) {
+          testQueue.enqueue(testQueue.dequeue());
+        }
+      }
+
+      while(testQueue.items.length>1){
+        lop()
+        testQueue.dequeue()
+      }
+
+      console.log("最终留下来的人:"+testQueue.front())
+      console.log("他在原数组中的位置"+personList.indexOf(testQueue.front()))
+    }
+
+    jiguchuanhua(["小明", "小红", "小王", "小李", "小周"], 2)
+    
+  </script>
+
+</body>
+
+</html>

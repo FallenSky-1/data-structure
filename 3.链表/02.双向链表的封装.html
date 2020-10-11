@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+  <script>
+    function DoubleLinkedList() {
+      this.head = null;
+      this.length = 0;
+      this.tail = null;
+
+      function Node(data) {
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+      }
+
+      DoubleLinkedList.prototype.append = function (data) {
+        let newNode = new Node(data);
+        let currentNode = this.head;
+        let previousNode = null;
+        if (this.head == null) {
+          this.head = newNode;
+          this.tail = newNode;
+        } else {
+          while (currentNode.next) {
+            previousNode = currentNode
+            currentNode = currentNode.next
+          }
+          currentNode.next = newNode;
+          newNode.prev = currentNode;
+          this.tail = newNode;
+        }
+        this.length++;
+      }
+
+      DoubleLinkedList.prototype.forwardString = function () {
+        let currentNode = this.tail;
+        let resultString = ''
+        while (currentNode) {
+          resultString += currentNode.data + ' '
+          currentNode = currentNode.prev
+        }
+        return resultString
+      }
+
+      DoubleLinkedList.prototype.insert = function (position, data) {
+        let currentNode = this.head;
+        let newNode = new Node(data)
+        let index = 0;
+
+        //这里忘记加越界判断了
+        if (this.length == 0) {
+          this.head = newNode;
+          this.tail = newNode;
+          this.length++
+        }//注意，这个大括号的用法很灵性
+        else {
+          if (position == 0) {
+            this.head.prev = newNode;
+            newNode.next = this.head;
+            this.head = newNode
+            this.length++
+          } else if (position == this.length) {
+            this.append(data)
+          } else {
+            while (index < position) {
+              currentNode = currentNode.next;
+              index++
+            }
+            //双向链表的插入需要重新定义:newNode的prev和next、newNode前面一个节点的next、newNode后面一个节点(即被插入元素)的prev
+            newNode.next = currentNode
+            newNode.prev = currentNode.prev
+            currentNode.prev.next = newNode
+            currentNode.prev = newNode
+            this.length++
+          }
+        }
+      }
+
+      DoubleLinkedList.prototype.get = function (position) {
+        let currentNode = this.head;
+        let index = 0;
+        //这里也可以使用二分查找(待定)
+        while (index < position) {
+          currentNode = currentNode.next
+          index++
+        }
+        return currentNode;
+      }
+
+      DoubleLinkedList.prototype.indexOf = function (data) {
+        let index = 0;
+        let currentNode = this.head
+        while (currentNode) {
+          if (currentNode.data == data) {
+            return index
+          }
+          currentNode = currentNode.next
+          index++
+        }
+        return -1
+      }
+
+      DoubleLinkedList.prototype.update = function (position, data) {
+        let index = 0;
+        let currentNode = this.head
+        if (position < 0 || position > this.length) {
+          return false
+        } else {
+          while (index < position) {
+            currentNode = currentNode.next
+            index++
+          }
+        }
+        currentNode.data = data;
+      }
+
+      DoubleLinkedList.prototype.removeAt = function (position) {
+        let index = 0;
+        let currentNode = this.head
+        if (position < 0 || position >= this.length) {
+          return false
+        }
+
+        if (this.length == 1) {
+          this.head = null
+          this.tail = null
+        } else if (position == 0) {
+          this.head = currentNode.next
+          currentNode.next.prev = null
+        } else if (position == this.length - 1) {
+          this.tail.prev.next = null
+          this.tail = this.tail.prev
+        } else {
+          while (index < position) {
+            currentNode = currentNode.next
+            index++
+          }
+          //没有指针指向的对象会自动删掉
+          currentNode.prev.next = currentNode.next
+          currentNode.next.prev = currentNode.prev
+        }
+        this.length--
+        return currentNode
+      }
+
+      DoubleLinkedList.prototype.remove = function (data) {
+        let index = this.indexOf(data);
+        this.removeAt(index)
+      }
+    }
+
+
+    let demo = new DoubleLinkedList();
+    demo.append("第零个节点");
+    demo.append("第一个节点");
+    demo.append("第二个节点");
+    demo.insert(3, "最后的节点");
+
+    //测试insert方法
+    // demo.insert(0, "最后的节点");
+    // demo.insert(1, "节点1");
+
+    //测试get方法
+    // console.log(demo.get(0))
+    // console.log(demo)
+
+    //测试indexOf方法
+    // console.log(demo.indexOf("节点1"))
+
+    //测试update方法
+    demo.update(1, "更新过的节点");
+
+    //测试removeAt方法
+    demo.removeAt(1)
+
+
+    console.log(demo)
+  </script>
+
+</body>
+
+</html>

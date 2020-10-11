@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function LinkedList() {
+
+      function Node(data) {
+        this.data = data;
+        this.next = null
+      }
+
+      this.head = null;
+      this.length = 0;
+
+      //在末尾添加节点方法
+      LinkedList.prototype.append = function (data) {
+        let newNode = new Node(data);
+        let currentNode = null;
+        if (this.length == 0) {
+          this.head = newNode;
+        } else {
+          currentNode = this.head;//此时的currentNode其实就是第一个节点
+          while (currentNode.next) {
+            currentNode = currentNode.next;//此时的currentNode是最后一个节点
+            //currentNode可以和链表里的节点newNode划上等号(同为引用数据类型,currentNode和链表里的节点保存相同的地址、指向堆内存中同一块区域)
+          }
+          currentNode.next = newNode;
+        }
+        this.length++;
+      };
+
+      //toString方法
+      LinkedList.prototype.toString = function () {
+        let currentNode = this.head;
+        let listString = '';
+        while (currentNode) {
+          listString += currentNode.data + " "
+          currentNode = currentNode.next
+        }
+        return listString
+      };
+
+      //在任意合法位置插入节点
+      LinkedList.prototype.insert = function (data, position) {
+        let newNode = new Node(data);
+        let currentNode = this.head;
+        let previousNode = null;
+        let index = 0;
+        if (position < 0 || position > this.length) {
+          return false;
+        } else {
+          while (index < position) {
+            previousNode = currentNode
+            currentNode = currentNode.next
+            index++
+          }
+        }
+        newNode.next = currentNode;
+        previousNode.next = newNode;
+        this.length++;
+      }
+
+      //根据位置信息获取对应元素
+      LinkedList.prototype.get = function (position) {
+        let index = 0;
+        let currentNode = this.head
+        if (position < 0 || position >= this.length) {
+          return "请输入正确的位置信息"
+        } else {
+          while (index < position) {
+            currentNode = currentNode.next
+            index++
+          }
+          return currentNode;
+        }
+      }
+
+      //根据元素查找索引
+      LinkedList.prototype.indexOf = function (element) {
+        let index = 0;
+        let currentNode = this.head;
+        // let flag = false;
+        while (index < this.length) {
+          if (currentNode.data == element) {
+            return index
+            flag = true;
+            break
+          }
+          currentNode = currentNode.next;
+          index++
+        }
+        return -1
+      }
+
+      //链表更新
+      LinkedList.prototype.update = function (position, newData) {
+        let index = 0;
+        let currentNode = this.head;
+        if (position >= this.length || position < 0) {
+          return false
+        } else {
+          while (index < position) {
+            currentNode = currentNode.next;
+            index++;
+          }
+        }
+        currentNode.data = newData;
+      }
+
+      //根据位置从链表的特定位置移除一项
+      LinkedList.prototype.removeAt = function (position) {
+        let index = 0;
+        let currentNode = this.head;
+        let previousNode = null;
+        if (position >= this.length || position < 0) {
+          return false
+        } else if (position == 0) {
+          this.head = this.head.next
+        } else {
+          while (index < position) {
+            previousNode = currentNode;
+            currentNode = currentNode.next;
+            index++;
+          }
+        }
+        //JS会自动回收不存在引用的对象
+        previousNode.next = currentNode.next;
+        this.length--;
+      }
+
+      //根据内容从链表的特定位置移除
+      LinkedList.prototype.remove = function(data){
+        let index = this.indexOf(data)
+        this.removeAt(index);
+      }
+
+    }
+
+
+
+
+
+    let LinkedListA = new LinkedList();
+    LinkedListA.append("你好1");
+    LinkedListA.append("你好2");
+    LinkedListA.append("你好3");
+    LinkedListA.insert("插入1", 1);
+    // console.log(LinkedListA.get(3));
+
+    // console.log(LinkedListA)
+
+    // console.log(LinkedListA.indexOf("插入1"));
+    // console.log(LinkedListA.indexOf("不存在的节点"));
+    // LinkedListA.update(2, "修改的元素");
+    // LinkedListA.removeAt(3);
+    LinkedListA.remove("插入1");
+    console.log(LinkedListA)
+  </script>
+
+</body>
+
+</html>

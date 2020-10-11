@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function priQueue() {
+
+      this.items = [];
+
+      function queueElement(element, priority) {
+        this.element = element;
+        this.priority = priority;
+      }
+
+      priQueue.prototype.enqueue= function (element, priority) {
+        let elementToInsert = new queueElement(element, priority);
+        if (this.items.length == 0) {
+          this.items.push(elementToInsert)
+        } else {
+          for (let i = 0; i < this.items.length; i++) {
+            if (elementToInsert.priority > this.items[i].priority) {
+              this.items.splice(i, 0, elementToInsert);
+              break //这个break十分重要，如果不加break会因为循环次数太多而报错
+            }else{
+              this.items.push(elementToInsert)
+              break//这个break不加也会报错
+            }
+          }
+        }
+      }
+      priQueue.prototype.dequeue = function () {
+        return this.items.shift();
+      }
+
+      priQueue.prototype.front = function () {
+        return this.items[0]
+      }
+
+      priQueue.prototype.isEmpty = function () {
+        if (this.items.length == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      priQueue.prototype.size = function () {
+        return this.items.length + 1;
+      }
+    }
+    var aaa = new priQueue();
+    aaa.enqueue("Hello", 12);
+    aaa.enqueue("Hello2", 245);
+    aaa.enqueue("HelloMax", 1000);
+    aaa.enqueue("HelloMax", 1);
+    console.log(aaa.items);
+  </script>
+</body>
+
+</html>

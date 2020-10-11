@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script>
+    function HashTable() {
+      this.stroage = [];
+      this.count = 0;
+      this.limit = 7;
+      let previousOldStorage = null;
+
+      //哈希函数
+      HashTable.prototype.hashFun = function (key, length) {
+        //这里必须要给hashCode这个变量初始化一个0,否则当hashCode类型不明确时(实际上为undefine),第22行的计算会返回一个NaN类型的数值
+        let hashCode = 0;
+        for (let i = 0; i < key.length; i++) {
+          hashCode = 37 * hashCode + key.charCodeAt(i)
+        }
+        index = hashCode % length
+        return index
+      }
+
+
+
+      //插入(或者修改)方法
+      HashTable.prototype.pushFun = function (key, value) {
+        let index = this.hashFun(key, this.limit)
+
+        if (this.stroage[index] == null) {
+          this.stroage[index] = []
+          /*
+           以下两种错误:
+             this.storage[index] = []
+             或者bucket=[]
+            错误原因:bucket与this.stroage[index]指向不是同一块数据(指向的引用变了)
+            所以将bucket在31行的代码之后再赋值比较好
+             */
+        }
+        let bucket = this.stroage[index]
+
+        //检查是否存在并修改
+        for (let i = 0; i < bucket.length; i++) {
+          if (bucket[i][0] == key) {
+            bucket[i][0] = value
+            return  //这里的return用于终止函数
+          }
+        }
+
+        //如不存在则添加
+        bucket.push([key, value])
+        this.count++
+
+        //检查容量
+        if (this.count > this.limit * 0.75) {
+          this.resize(this.limit * 2)
+        }
+      }
+
+
+
+      //获取方法
+      HashTable.prototype.get = function (key) {
+        let index = this.hashFun(key, this.limit)
+
+        if (this.stroage[index] == null) {
+          return null
+        }
+        let bucket = this.stroage[index]
+        for (let i = 0; i < bucket.length; i++) {
+          if (bucket[i][0] == key) {
+            return bucket[i][1]
+          }
+        }
+        return null
+      }
+
+
+
+      //删除方法
+      HashTable.prototype.delete = function (key) {
+        let index = this.hashFun(key, this.limit)
+        if (this.stroage[index] == null) {
+          return null
+        }
+        let bucket = this.stroage[index]
+        for (let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          if (bucket[i][0] == key) {
+            bucket.splice(i, 1)
+            this.count--
+            //检查容量
+          if(this.limit>7&&this.count<this.limit*0.25){
+            this.resize(Math.floor(this.limit/2))
+          }  
+            return tuple
+          }
+        }
+        return null
+      }
+
+
+
+      //扩容方法
+      HashTable.prototype.resize = function (newLength) {
+        let oldStorage = this.stroage
+        this.stroage = []
+        this.count = 0
+        this.limit = newLength
+
+        for (let i = 0; i < oldStorage.length; i++) {
+          if (oldStorage[i] == null) {
+            continue
+          }
+          for (let j = 0; j < oldStorage[i].length; j++) {
+            this.pushFun(oldStorage[i][j][0], oldStorage[i][j][1])
+          }
+        }
+      }
+    }
+
+    let hash = new HashTable()
+    hash.pushFun("rocco", 43)
+    hash.pushFun("james", 4233)
+    hash.pushFun("david", 4233)
+    hash.pushFun("hinna", 4233)
+    hash.resize(14)
+    console.log(hash.delete("david"))
+    console.log(hash.delete("hinna"))
+    hash.pushFun("hinna", 523)
+    hash.pushFun("david", 134)
+    hash.pushFun("david21", 591)
+    console.log(hash)
+
+
+  </script>
+
+</body>
+
+</html>
