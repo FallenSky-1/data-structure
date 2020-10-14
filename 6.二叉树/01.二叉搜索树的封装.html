@@ -20,7 +20,58 @@
       }
 
       this.root = null
+
+      //二叉树的插入操作
+      BinarySearchTree.prototype.insert = function (key) {
+        let newNode = new Node(key)
+        if (this.root == null) {
+          this.root = newNode
+        } else {
+          this.insertNode(newNode, this.root)
+        }
+      }
+      BinarySearchTree.prototype.insertNode = function (newNode, Node) {
+        if (newNode.key < Node.key) {
+          if (Node.left == null) {
+            Node.left = newNode
+          } else {
+            Node = Node.left
+            this.insertNode(newNode, Node)
+          }
+        } else {
+          if (Node.right == null) {
+            Node.right = newNode
+          } else {
+            Node = Node.right
+            this.insertNode(newNode, Node)
+          }
+        }
+      }
+
+     //先序遍历
+      BinarySearchTree.prototype.preorderTraversal = function () {
+         this.preorderNodeTraversal(this.root)
+      }
+      BinarySearchTree.prototype.preorderNodeTraversal = function(Node){
+        if(Node!==null){
+            console.log(Node)
+            this.preorderNodeTraversal(Node.left)
+            this.preorderNodeTraversal(Node.right)
+        }
+      }
     }
+
+    let bst = new BinarySearchTree()
+    bst.insert(50)
+    bst.insert(35)
+    bst.insert(32)
+    bst.insert(39)
+    bst.insert(25)
+    bst.insert(34)
+    bst.insert(53)
+    bst.insert(51)
+    bst.insert(55)
+    console.log(bst.preorderTraversal())
   </script>
 
 </body>
