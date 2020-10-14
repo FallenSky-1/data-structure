@@ -48,15 +48,41 @@
         }
       }
 
-     //先序遍历
+      //先序遍历
       BinarySearchTree.prototype.preorderTraversal = function () {
-         this.preorderNodeTraversal(this.root)
+        this.preorderNodeTraversal(this.root)
       }
-      BinarySearchTree.prototype.preorderNodeTraversal = function(Node){
-        if(Node!==null){
-            console.log(Node)
-            this.preorderNodeTraversal(Node.left)
-            this.preorderNodeTraversal(Node.right)
+      BinarySearchTree.prototype.preorderNodeTraversal = function (Node) {
+        if (Node !== null) {
+          console.log(Node)
+          this.preorderNodeTraversal(Node.left)
+          this.preorderNodeTraversal(Node.right)
+        }
+      }
+
+      //获取最大值
+      BinarySearchTree.prototype.max = function () {
+        let currentNode = this.root
+        if (currentNode != null) {
+          while (currentNode.right != null) {
+            currentNode = currentNode.right
+          }
+          return currentNode
+        } else {
+          return false
+        }
+      }
+
+      //获取最小值
+      BinarySearchTree.prototype.min = function () {
+        let currentNode = this.root
+        if (currentNode != null) {
+          while (currentNode.left != null) {
+            currentNode = currentNode.left
+          }
+          return currentNode
+        } else {
+          return false
         }
       }
     }
@@ -72,6 +98,7 @@
     bst.insert(51)
     bst.insert(55)
     console.log(bst.preorderTraversal())
+    // console.log(bst.max())
   </script>
 
 </body>
