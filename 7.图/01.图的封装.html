@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script src="../7.图/02.队列的导入.js"></script>
+  <script>
+    //封装字典
+    function Dictionary() {
+      this.items = {}
+      Dictionary.prototype.set = function (key, value) {
+        this.items[key] = value
+      }
+
+      Dictionary.prototype.has = function (key) {
+        return this.items.hasOwnProperty(key)
+      }
+
+      Dictionary.prototype.remove = function (key) {
+        if (!this.has(key)) return false
+        delete this.items[key]
+      }
+
+      Dictionary.prototype.get = function (key) {
+        return this.has(key) ? this.items[key] : undefined
+      }
+
+      Dictionary.prototype.keys = function () {
+        return Object.keys(this.items)
+      }
+
+      Dictionary.prototype.values = function () {
+        return Object.values(this.items)
+      }
+
+      Dictionary.prototype.size = function () {
+        return this.keys().length
+      }
+
+      Dictionary.prototype.clear = function () {
+        this.items = {}
+      }
+    }
+
+    //封装图
+    function Graph() {
+      this.vertexs = []
+      this.edge = new Dictionary()
+
+      //添加顶点
+      Graph.prototype.addVertex = function (vertex) {
+        this.vertexs.push(vertex)
+        this.edge.set(vertex, [])
+      }
+
+      //添加边
+      Graph.prototype.addEdge = function (vertex1, vertex2) {
+        //无向图的情况(vertex2也连通vertex1)
+        if (this.edge.has(vertex1) && this.edge.has(vertex2)) {
+          this.edge.get(vertex1).push(vertex2)
+          this.edge.get(vertex2).push(vertex1)
+        } else {
+          return "non-existent edge"
+        }
+      }
+
+      //toString方法
+      Graph.prototype.toString = function () {
+        let resultString = ''
+        let edgeList = this.edge.values();//把(edge)字典里的值作为数组取出来
+        for (let i = 0; i < this.vertexs.length; i++) {
+          resultString += this.vertexs[i] + " -> "
+          for (let j = 0; j < edgeList[i].length; j++) {
+            resultString += edgeList[i][j] + " "
+          }
+          resultString += "\n"
+        }
+        return resultString
+      }
+
+      //广度优先搜索
+      Graph.prototype.initalizeColor = function () {
+        let color = {};
+        for (let i = 0; i < this.vertexs.length; i++) {
+          color[this.vertexs[i]] = "white";
+        }
+        return color
+      }
+
+      //广度优先搜索
+      Graph.prototype.bsf = function (vertex) {
+        let sifterColor = this.initalizeColor() //这个对象用来筛别已经被访问过的元素
+        let storgae = new queue() //储存待探索元素的队列
+        storgae.enqueue(vertex)
+        while (!storgae.isEmpty()) { //开始探索
+          let v = storgae.dequeue() //取出在队列首的,在接下来将要被探索的顶点
+          let vList = this.edge.get(v) //取出队列首顶点连通顶点的数组
+          for (let i = 0; i < vList.length; i++) {
+            let element = vList[i]
+            if (sifterColor[element] == "white") { //判别顶点是不是已经被访问过了
+              sifterColor[element] = "gray" //如果还没访问过，则将顶点的颜色改为灰色,表示已经被访问过了
+              storgae.enqueue(element) //把已经访问过的顶点放进待探索队列中,等待探索
+            }
+          }
+          console.log(v)    //处理被探索的元素(可以用任何函数处理它)
+          sifterColor[v] = "black" //将元素的状态改为已探索、即相应的颜色变为黑色
+        }
+      }
+
+      //深度优先搜索
+      Graph.prototype.dsf = function (vertex) {
+        let colorStatus = this.initalizeColor()
+        this.dsfLoop(vertex, colorStatus)
+      }
+      Graph.prototype.dsfLoop = function (vertex, color) {
+        color[vertex] = "gray"
+        console.log(vertex)
+        //访问v相连的顶点
+        let vList = this.edge.get(vertex)
+        for (let i = 0; i < vList.length; i++) {
+          if (color[vList[i]] == "white") {
+            this.dsfLoop(vList[i], color)  
+          }
+        }
+      }
+
+      //深度优先与广度优先的差异,
+      //广度优先:把相连的顶点丢进待探索数组里,等待循环
+      //深度优先:访问到相连的顶点,从被访问到的顶点开始继续递归
+    }
+
+
+    let graph = new Graph()
+    graph.addVertex("A")
+    graph.addVertex("B")
+    graph.addVertex("C")
+    graph.addVertex("D")
+    graph.addVertex("E")
+    graph.addVertex("F")
+    graph.addEdge("A", "B")
+    graph.addEdge("C", "B")
+    graph.addEdge("A", "D")
+    graph.addEdge("C", "E")
+    graph.addEdge("B", "D")
+    graph.addEdge("D", "F")
+    console.log(graph.toString())
+    console.log(graph.initalizeColor())
+    // graph.bsf("E")
+    graph.dsf("A")
+  </script>
+
+</body>
+
+</html>

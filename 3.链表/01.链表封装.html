@@ -28,7 +28,7 @@
         } else {
           currentNode = this.head;//此时的currentNode其实就是第一个节点
           while (currentNode.next) {
-            currentNode = currentNode.next;//此时的currentNode是最后一个节点
+            currentNode = currentNode.next;//这个while循环结束时的currentNode是最后一个节点
             //currentNode可以和链表里的节点newNode划上等号(同为引用数据类型,currentNode和链表里的节点保存相同的地址、指向堆内存中同一块区域)
           }
           currentNode.next = newNode;
