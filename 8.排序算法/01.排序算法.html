@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>各种排序算法的实现</title>
+</head>
+
+<body>
+
+  <script>
+    function ArrayList() {
+      this.items = []
+      ArrayList.prototype.insert = function (element) {
+        this.items.push(element)
+      }
+
+      ArrayList.prototype.toString = function () {
+        return this.items.join("-")
+      }
+
+      //冒泡排序
+      ArrayList.prototype.bubbleSort = function () {
+        let length = this.items.length
+        //大循环这么写的好处:动态地表示数据项的减少,同时控制整个循环的次数
+        for (let j = length - 1; j > 0; j--) {
+          for (let i = 0; i < j; i++) {
+            if (this.items[i] > this.items[i + 1]) {
+              let temp = this.items[i]
+              this.items[i] = this.items[i + 1]
+              this.items[i + 1] = temp
+            }
+          }
+        }
+      }
+
+      //选择排序
+      ArrayList.prototype.selectSort = function () {
+        let length = this.items.length
+        for (let j = 0; j < length - 1; j++) {
+          let minIndex = j
+          for (let i = j + 1; i < length; i++) {
+            if (this.items[minIndex] > this.items[i]) {
+              minIndex = i
+            }
+          }
+          let temp = this.items[j]
+          this.items[j] = this.items[minIndex]
+          this.items[minIndex] = temp
+        }
+      }
+
+      //插入排序
+      ArrayList.prototype.insertSort = function () {
+        let length = this.items.length
+        for (let i = 0; i < length; i++) {
+          let j = i;
+          let temp = this.items[i]
+          while (this.items[j - 1] > temp && j > 0) {
+            this.items[j] = this.items[j - 1]
+            j--
+          }
+          this.items[j] = temp
+        }
+      }
+
+      //希尔排序
+      ArrayList.prototype.shellSort = function () {
+        let length = this.items.length
+        let gap = Math.floor(length / 2)
+        while (gap >= 1) {
+          for (let i = gap; i < length; i++) {
+            let j = i;
+            let temp = this.items[i]
+            while (this.items[j - gap] > temp && j > gap - 1) {
+              this.items[j] = this.items[j - gap]
+              j = j - gap
+            }
+            //这里的j已经减过了
+            this.items[j] = temp
+            gap = Math.floor(gap / 2)
+          }
+        }
+      }
+
+      //快速排序
+      ArrayList.prototype.median = function (left, right) {
+        let center = Math.floor((left + right) / 2)
+
+        if (this.items[left] > this.items[center]) {
+          let temp = this.items[center]
+          this.items[center] = this.items[left]
+          this.items[left] = temp
+        }
+        if (this.items[left] > this.items[right]) {
+          let temp = this.items[right]
+          this.items[right] = this.items[left]
+          this.items[left] = temp
+        }
+        if (this.items[right] < this.items[center]) {
+          let temp = this.items[center]
+          this.items[center] = this.items[right]
+          this.items[right] = temp
+        }
+        let temp = this.items[center]
+        this.items[center] = this.items[right - 1]
+        this.items[right - 1] = temp
+        return this.items[right - 1]
+      }
+      ArrayList.prototype.quickSort = function () {
+        let length = this.items.length
+        this.quick(0, length - 1)
+      }
+      ArrayList.prototype.quick = function (left, right) {
+        // alert("left=" + left + " right=" + right)
+        if (left >= right) return //递归的结束条件 即i结束时<=1或i结束时>=11
+
+        let pivot = this.median(left, right)  //获取枢纽
+        // alert("pivot=" + pivot)
+        let i = left //不能是left+1的原因:有些时候left没有经过while循环,直接到140行了
+        let j = right //right-1也可以
+        while (i < j) {
+          while (this.items[i] < pivot) {
+            i++
+          }
+          while (this.items[j] >= pivot) {
+            j--
+          }
+          // alert("i=" + i + ",j=" + j)
+          if (i < j) {
+            let temp = this.items[i]
+            this.items[i] = this.items[j]
+            this.items[j] = temp
+          } else {
+            break
+          }
+        }
+        let temp = this.items[i]
+        this.items[i] = this.items[right - 1]
+        this.items[right - 1] = temp
+
+        this.quick(left, i - 1)
+        this.quick(i + 1, right)
+
+      }
+    }
+
+    let list = new ArrayList()
+    // list.insert(132)
+    // list.insert(85)
+    // list.insert(1)
+    // list.insert(142)
+    // list.insert(73)
+    // list.insert(843)
+    // list.insert(19)
+    // list.insert(16)
+    // list.insert(55)
+    // list.insert(88)
+    // list.insert(104)
+    // list.insert(45)
+    // list.insert(33)
+
+    list.insert(23)
+    list.insert(4)
+    list.insert(72)
+    list.insert(10)
+    list.insert(76)
+    list.insert(7)
+    list.insert(12)
+    list.insert(100)
+    list.insert(13)
+    list.insert(88)
+    list.insert(104)
+    list.quickSort()
+    console.log(list)
+  </script>
+
+</body>
+
+</html>

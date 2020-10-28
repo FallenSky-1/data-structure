@@ -98,6 +98,7 @@
         let sifterColor = this.initalizeColor() //这个对象用来筛别已经被访问过的元素
         let storgae = new queue() //储存待探索元素的队列
         storgae.enqueue(vertex)
+        sifterColor[vertex]="gray"
         while (!storgae.isEmpty()) { //开始探索
           let v = storgae.dequeue() //取出在队列首的,在接下来将要被探索的顶点
           let vList = this.edge.get(v) //取出队列首顶点连通顶点的数组
